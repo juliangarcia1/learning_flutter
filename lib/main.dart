@@ -8,6 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Startup Name Generator',
+      theme: ,
       home: RandomWords(),
     );
   }
@@ -23,7 +24,10 @@ class RandomWordsState extends State<RandomWords> {
     // return Text(wordPair.asPascalCase);
     return Scaffold(
       appBar: AppBar(
-        title: Text('StartUp Name Generator')
+        title: Text('StartUp Name Generator'),
+        actions: <Widget>[
+          IconButton(icon: const Icon(Icons.list), onPressed: _pushSaved),
+        ],
       ),
       body: _buildSuggestions(),
       floatingActionButton: FloatingActionButton(
@@ -66,6 +70,35 @@ class RandomWordsState extends State<RandomWords> {
           }
         });
       },
+    );
+  }
+  void _pushSaved() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          final Iterable<ListTile> tiles = _saved.map(
+              (WordPair pair) {
+                return ListTile(
+                  title: Text(
+                    pair.asPascalCase,
+                    style: _biggerFont,
+                  ),
+                );
+              }
+          );
+          final List<Widget> divided = ListTile
+          .divideTiles(
+              tiles: tiles,
+              context: context
+          ).toList();
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Saved suggestions'),
+            ),
+            body: ListView(children: divided),
+          );
+        }
+      )
     );
   }
 }
